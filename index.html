@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interaktif: Sudut & Hubungan Antar Sudut (30 Soal)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            primary: '#3b82f6',
+                            indigo: '#6366f1',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+        }
+        .svg-container svg {
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- Header & Overall Progress -->
+    <header class="sticky top-0 z-50 glass-header border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        <i class="fa-solid fa-shapes"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-slate-900 text-base sm:text-lg leading-tight">Quiz Sudut & Hubungan Antar Sudut</h1>
+                        <p class="text-xs text-slate-500 font-medium">Cambridge Lower Secondary Math (30 Soal Interaktif)</p>
+                    </div>
+                </div>
+
+                <!-- Live Score & Progress Stats -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-4 bg-slate-100/80 px-3.5 py-1.5 rounded-2xl border border-slate-200 text-xs">
+                        <div>
+                            <span class="text-slate-500 block">Terjawab:</span>
+                            <span id="stat-answered" class="font-extrabold text-blue-600 text-sm">0 / 30</span>
+                        </div>
+                        <div class="h-6 w-px bg-slate-300"></div>
+                        <div>
+                            <span class="text-slate-500 block">Benar:</span>
+                            <span id="stat-correct" class="font-extrabold text-emerald-600 text-sm">0</span>
+                        </div>
+                        <div class="h-6 w-px bg-slate-300"></div>
+                        <div>
+                            <span class="text-slate-500 block">Skor:</span>
+                            <span id="stat-score" class="font-extrabold text-purple-600 text-sm">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Reset Progress Button -->
+                    <button onclick="confirmReset()" title="Reset Semua Jawaban" class="p-2.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition border border-transparent hover:border-rose-200">
+                        <i class="fa-solid fa-rotate-right text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden -mb-0.5">
+                <div id="top-progress-bar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Offline/Persistence Notice Banner -->
+        <div id="save-alert" class="mb-6 p-3.5 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between text-xs sm:text-sm text-blue-800 shadow-sm transition-all">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-floppy-disk text-blue-600 text-base"></i>
+                <span><strong>Sistem Penyimpanan Otomatis Aktif:</strong> Jawabanmu tersimpan di peramban. Jika halaman tertutup atau jaringan terputus, progresmu tidak akan hilang.</span>
+            </div>
+            <button onclick="document.getElementById('save-alert').remove()" class="text-blue-500 hover:text-blue-700">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- LEFT/MAIN COLUMN: Question View -->
+            <div class="lg:col-span-8 space-y-6">
+                <div id="question-card" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm relative transition-all">
+                    
+                    <!-- Question Header Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-6">
+                        <div class="flex items-center gap-2.5">
+                            <span id="question-number-badge" class="px-3 py-1 bg-blue-600 text-white font-extrabold text-xs rounded-xl shadow-sm">
+                                Soal 1 dari 30
+                            </span>
+                            <span id="question-topic-badge" class="px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs rounded-xl">
+                                Topik
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button id="flag-btn" onclick="toggleFlagCurrent()" class="px-3 py-1.5 bg-slate-100 hover:bg-amber-50 text-slate-600 hover:text-amber-600 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-regular fa-bookmark" id="flag-icon"></i>
+                                <span id="flag-text">Tandai Soal</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Text -->
+                    <div class="space-y-4 mb-6">
+                        <h3 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+                            Loading pertanyaan...
+                        </h3>
+                    </div>
+
+                    <!-- SVG Visual Illustration Container -->
+                    <div id="svg-visual-box" class="mb-6 flex justify-center bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-inner svg-container">
+                        <!-- Rendered dynamically -->
+                    </div>
+
+                    <!-- Answer Options Grid -->
+                    <div id="options-container" class="grid grid-cols-1 gap-3 mb-6">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <!-- Instant Feedback & Explanation Panel -->
+                    <div id="feedback-panel" class="hidden p-5 rounded-2xl border text-sm space-y-3 transition-all duration-300">
+                        <div class="flex items-center gap-2.5 font-bold text-base" id="feedback-header">
+                            <!-- Icon and Text -->
+                        </div>
+                        <div id="feedback-explanation" class="text-slate-700 leading-relaxed text-xs sm:text-sm pt-2 border-t border-slate-200/60">
+                            <!-- Explanation text -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Navigation Controls (Prev/Next) -->
+                <div class="flex items-center justify-between gap-4">
+                    <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-5 py-3 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-sm rounded-2xl transition shadow-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-left"></i> Sebelumnya
+                    </button>
+
+                    <span class="text-xs font-bold text-slate-500" id="bottom-counter">1 / 30</span>
+
+                    <button id="next-btn" onclick="navigateQuestion(1)" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-2xl transition shadow-md hover:shadow-lg flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Question Navigation Grid & Stats -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Navigation Grid Card -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 sticky top-24">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-grid-2 text-blue-600"></i> Navigasi Soal
+                        </h4>
+                        <span class="text-xs font-semibold text-slate-500" id="grid-status-text">30 Soal</span>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl text-[11px] font-bold text-slate-600 text-center">
+                        <button onclick="setGridFilter('all')" id="filter-all" class="py-1.5 rounded-lg bg-white shadow-xs text-blue-600">Semua</button>
+                        <button onclick="setGridFilter('unanswered')" id="filter-unanswered" class="py-1.5 rounded-lg hover:text-slate-900">Belum</button>
+                        <button onclick="setGridFilter('answered')" id="filter-answered" class="py-1.5 rounded-lg hover:text-slate-900">Terjawab</button>
+                        <button onclick="setGridFilter('flagged')" id="filter-flagged" class="py-1.5 rounded-lg hover:text-slate-900">Ragu</button>
+                    </div>
+
+                    <!-- Grid Buttons Container -->
+                    <div id="nav-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-[320px] overflow-y-auto custom-scrollbar p-1">
+                        <!-- Buttons 1-30 dynamically built -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-md bg-emerald-500 inline-block"></span> Benar
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-md bg-rose-500 inline-block"></span> Salah
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-md bg-slate-200 border border-slate-300 inline-block"></span> Belum Diisi
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-md bg-amber-400 inline-block"></span> Ditandai (Ragu)
+                        </div>
+                    </div>
+
+                    <!-- Finish Quiz Button -->
+                    <button onclick="showFinalSummary()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-sm rounded-2xl transition shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-flag-checkered"></i> Selesaikan & Liat Ringkasan
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Final Summary -->
+    <div id="summary-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto custom-scrollbar border border-slate-100">
+            
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-emerald-500 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Hasil & Analisis Quiz</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Berikut adalah ringkasan performa pemahaman materi sudutmu.</p>
+            </div>
+
+            <!-- Score Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                    <span class="text-xs text-slate-500 font-bold block">Skor Akhir</span>
+                    <span id="modal-score" class="text-2xl font-black text-purple-600 mt-1 block">0%</span>
+                </div>
+                <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
+                    <span class="text-xs text-emerald-700 font-bold block">Jawaban Benar</span>
+                    <span id="modal-correct" class="text-2xl font-black text-emerald-600 mt-1 block">0</span>
+                </div>
+                <div class="p-4 bg-rose-50 rounded-2xl border border-rose-200">
+                    <span class="text-xs text-rose-700 font-bold block">Jawaban Salah</span>
+                    <span id="modal-incorrect" class="text-2xl font-black text-rose-600 mt-1 block">0</span>
+                </div>
+                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200">
+                    <span class="text-xs text-amber-700 font-bold block">Belum Diisi</span>
+                    <span id="modal-unanswered" class="text-2xl font-black text-amber-600 mt-1 block">0</span>
+                </div>
+            </div>
+
+            <!-- Motivational Message -->
+            <div id="modal-message-box" class="p-4 rounded-2xl text-xs sm:text-sm font-semibold text-center border">
+                <!-- Built dynamically -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100">
+                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition">
+                    Kembali ke Quiz
+                </button>
+                <button onclick="confirmReset()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition shadow-md">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> Ulangi Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Engine -->
+    <script>
+        // -------------------------------------------------------------
+        // 30 UNIQUE QUESTIONS DATA WITH EXACT OPTION BALANCE
+        // Options distribution: A=8, B=7, C=8, D=7
+        // -------------------------------------------------------------
+        const questionsData = [
+            {
+                id: 1,
+                topic: "Klasifikasi Sudut",
+                question: "Sebuah sudut memiliki ukuran $142.8^\\circ$. Berdasarkan besarnya, sudut ini dikategorikan sebagai...",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="40" y1="130" x2="240" y2="130" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="160" y1="130" x2="60" y2="40" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M 195 130 A 35 35 0 0 0 135 108" fill="none" stroke="#f59e0b" stroke-width="3"/>
+                    <circle cx="160" cy="130" r="4" fill="#ffffff"/>
+                    <rect x="175" y="85" width="65" height="22" rx="6" fill="#f59e0b"/>
+                    <text x="207" y="100" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">142.8°</text>
+                </svg>`,
+                options: [
+                    { key: 'A', text: 'Sudut Lancip' },
+                    { key: 'B', text: 'Sudut Tumpul' },
+                    { key: 'C', text: 'Sudut Refleks' },
+                    { key: 'D', text: 'Sudut Siku-siku' }
+                ],
+                correct: 'B',
+                explanation: "Sudut tumpul (obtuse angle) adalah sudut yang besarnya berada di antara $90^\\circ$ dan $180^\\circ$. Karena $90^\\circ < 142.8^\\circ < 180^\\circ$, maka $142.8^\\circ$ adalah sudut tumpul."
+            },
+            {
+                id: 2,
+                topic: "Sudut Berpelurus",
+                question: "Dua sudut saling berpelurus (supplementary). Jika salah satu sudut besarnya $67.4^\\circ$, berapakah besar sudut pelurusnya?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="250" y2="120" stroke="#cbd5e1" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="140" y1="120" x2="210" y2="30" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M 175 120 A 35 35 0 0 0 162 92" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                    <path d="M 162 92 A 35 35 0 0 0 105 120" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="3 3"/>
+                    <circle cx="140" cy="120" r="4" fill="#ffffff"/>
+                    <rect x="180" y="95" width="55" height="20" rx="6" fill="#38bdf8"/>
+                    <text x="207" y="109" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">67.4°</text>
+                    <rect x="85" y="80" width="40" height="20" rx="6" fill="#a855f7"/>
+                    <text x="105" y="94" font-size="11" font-weight="black" fill="#ffffff" text-anchor="middle">x</text>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '112.6°' },
+                    { key: 'B', text: '122.6°' },
+                    { key: 'C', text: '22.6°' },
+                    { key: 'D', text: '180.0°' }
+                ],
+                correct: 'A',
+                explanation: "Jumlah dua sudut yang berpelurus (pada garis lurus) adalah $180^\\circ$. Mka sudut pelurusnya $x = 180^\\circ - 67.4^\\circ = 112.6^\\circ$."
+            },
+            {
+                id: 3,
+                topic: "Sudut Berpenyiku",
+                question: "Dua sudut saling berpenyiku (complementary). Jika sudut $A = (2x + 10)^\\circ$ dan sudut $B = 34.6^\\circ$, tentukan nilai dari variabel $x$!",
+                svg: `<svg viewBox="0 0 240 180" class="w-full max-w-xs h-40">
+                    <line x1="50" y1="140" x2="200" y2="140" stroke="#cbd5e1" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="50" y1="140" x2="50" y2="20" stroke="#cbd5e1" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="50" y1="140" x2="150" y2="50" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                    <rect x="50" y="125" width="15" height="15" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+                    <g transform="translate(100, 115)"><rect x="-25" y="-9" width="50" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">34.6°</text></g>
+                    <g transform="translate(68, 65)"><rect x="-32" y="-9" width="64" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(2x+10)°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '20.2' },
+                    { key: 'B', text: '25.4' },
+                    { key: 'C', text: '22.7' },
+                    { key: 'D', text: '27.7' }
+                ],
+                correct: 'C',
+                explanation: "Sudut berpenyiku berjumlah $90^\\circ$.\n$(2x + 10)^\\circ + 34.6^\\circ = 90^\\circ$\n$2x + 44.6 = 90$\n$2x = 90 - 44.6 = 45.4$\n$x = 45.4 / 2 = 22.7$."
+            },
+            {
+                id: 4,
+                topic: "Sudut Mengelilingi Titik",
+                question: "Tiga sudut bertemu pada satu titik membentuk satu putaran penuh. Dua sudut di antaranya bernilai $135.5^\\circ$ dan $118.2^\\circ$. Berapakah besar sudut ketiga?",
+                svg: `<svg viewBox="0 0 240 180" class="w-full max-w-xs h-40">
+                    <circle cx="120" cy="90" r="50" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="120" y1="90" x2="200" y2="90" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="120" y1="90" x2="70" y2="25" stroke="#818cf8" stroke-width="3"/>
+                    <line x1="120" y1="90" x2="60" y2="140" stroke="#34d399" stroke-width="3"/>
+                    <circle cx="120" cy="90" r="4" fill="#ffffff"/>
+                    <g transform="translate(140, 55)"><rect x="-22" y="-9" width="44" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">135.5°</text></g>
+                    <g transform="translate(62, 85)"><rect x="-22" y="-9" width="44" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">118.2°</text></g>
+                    <g transform="translate(130, 135)"><rect x="-16" y="-9" width="32" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="11" font-weight="black" fill="#0f172a" text-anchor="middle">y</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '102.3°' },
+                    { key: 'B', text: '104.3°' },
+                    { key: 'C', text: '106.3°' },
+                    { key: 'D', text: '108.3°' }
+                ],
+                correct: 'D',
+                explanation: "Jumlah sudut mengelilingi satu titik adalah $360^\\circ$.\n$y = 360^\\circ - (135.5^\\circ + 118.2^\\circ) = 360^\\circ - 253.7^\\circ = 106.3^\\circ$."
+            },
+            {
+                id: 5,
+                topic: "Sudut Bertolak Belakang",
+                question: "Dua garis berpotongan membentuk pasangan sudut bertolak belakang. Jika sudut $P = (5n - 18)^\\circ$ dan sudut bertolak belakangnya $Q = 112^\\circ$, carilah nilai $n$!",
+                svg: `<svg viewBox="0 0 260 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="130" x2="230" y2="30" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="30" y1="30" x2="230" y2="130" stroke="#34d399" stroke-width="3"/>
+                    <circle cx="130" cy="80" r="4" fill="#ffffff"/>
+                    <g transform="translate(130, 45)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="extrabold" fill="#0f172a" text-anchor="middle">(5n - 18)°</text></g>
+                    <g transform="translate(130, 115)"><rect x="-20" y="-9" width="40" height="18" rx="5" fill="#34d399"/><text x="0" y="3" font-size="10" font-weight="extrabold" fill="#0f172a" text-anchor="middle">112°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '26' },
+                    { key: 'B', text: '24' },
+                    { key: 'C', text: '28' },
+                    { key: 'D', text: '30' }
+                ],
+                correct: 'A',
+                explanation: "Sudut yang bertolak belakang sama besar.\n$5n - 18 = 112$\n$5n = 112 + 18 = 130$\n$n = 130 / 5 = 26$."
+            },
+            {
+                id: 6,
+                topic: "Garis Sejajar (Sehadap)",
+                question: "Pada dua garis sejajar dipotong transversal, dua sudut sehadap (corresponding angles) berukuran $(3x + 12)^\\circ$ dan $87^\\circ$. Berapakah nilai $x$?",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="190" y1="15" x2="90" y2="145" stroke="#a855f7" stroke-width="3"/>
+                    <g transform="translate(180, 35)"><rect x="-26" y="-9" width="52" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(3x+12)°</text></g>
+                    <g transform="translate(130, 105)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">87°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '23' },
+                    { key: 'B', text: '25' },
+                    { key: 'C', text: '27' },
+                    { key: 'D', text: '21' }
+                ],
+                correct: 'B',
+                explanation: "Sudut-sudut sehadap (F-pattern) nilainya sama besar.\n$3x + 12 = 87$\n$3x = 87 - 12 = 75$\n$x = 75 / 3 = 25$."
+            },
+            {
+                id: 7,
+                topic: "Garis Sejajar (Berseberangan Dalam)",
+                question: "Pasangan sudut berseberangan dalam (alternate interior) pada garis sejajar berukuran $4y^\\circ$ dan $(y + 64.5)^\\circ$. Tentukan nilai $y$!",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <path d="M 210 45 L 160 45 L 110 115 L 50 115" fill="none" stroke="#c084fc" stroke-width="3" stroke-dasharray="4 4"/>
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="185" y1="10" x2="85" y2="150" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(132, 60)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">4y°</text></g>
+                    <g transform="translate(142, 100)"><rect x="-32" y="-9" width="64" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">(y+64.5)°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '20.5' },
+                    { key: 'B', text: '22.0' },
+                    { key: 'C', text: '21.5' },
+                    { key: 'D', text: '23.5' }
+                ],
+                correct: 'C',
+                explanation: "Sudut berseberangan dalam (Z-pattern) nilainya sama besar.\n$4y = y + 64.5$\n$3y = 64.5$\n$y = 64.5 / 3 = 21.5$."
+            },
+            {
+                id: 8,
+                topic: "Garis Sejajar (Dalam Sepihak)",
+                question: "Dua sudut dalam sepihak (co-interior) pada dua garis sejajar berukuran $(2m + 15)^\\circ$ dan $100.5^\\circ$. Berapakah nilai variabel $m$?",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="180" y1="10" x2="90" y2="150" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(170, 65)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(2m+15)°</text></g>
+                    <g transform="translate(130, 95)"><rect x="-24" y="-9" width="48" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">100.5°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '32.25' },
+                    { key: 'B', text: '35.00' },
+                    { key: 'C', text: '28.50' },
+                    { key: 'D', text: '30.75' }
+                ],
+                correct: 'A',
+                explanation: "Sudut dalam sepihak (C-pattern) berjumlah $180^\\circ$.\n$(2m + 15)^\\circ + 100.5^\\circ = 180^\\circ$\n$2m + 115.5 = 180$\n$2m = 64.5$\n$m = 32.25$."
+            },
+            {
+                id: 9,
+                topic: "Sudut Segitiga",
+                question: "Dua sudut dalam sebuah segitiga adalah $54.2^\\circ$ dan $63.8^\\circ$. Berapakah besar sudut ketiga dari segitiga tersebut?",
+                svg: `<svg viewBox="0 0 260 160" class="w-full max-w-xs h-40">
+                    <polygon points="40,130 220,130 150,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(75, 120)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">54.2°</text></g>
+                    <g transform="translate(185, 120)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">63.8°</text></g>
+                    <g transform="translate(150, 52)"><rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">z</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '62.0°' },
+                    { key: 'B', text: '60.0°' },
+                    { key: 'C', text: '64.0°' },
+                    { key: 'D', text: '58.0°' }
+                ],
+                correct: 'A',
+                explanation: "Jumlah sudut dalam segitiga adalah $180^\\circ$.\n$z = 180^\\circ - (54.2^\\circ + 63.8^\\circ) = 180^\\circ - 118.0^\\circ = 62.0^\\circ$."
+            },
+            {
+                id: 10,
+                topic: "Sudut Luar Segitiga",
+                question: "Besar sudut luar suatu segitiga sama dengan jumlah dua sudut dalam yang tidak berpelurus dengannya. Jika dua sudut dalam segitiga adalah $48.5^\\circ$ dan $71.3^\\circ$, berapakah sudut luar segitiga di titik sudut ketiga?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="260" y2="120" stroke="#cbd5e1" stroke-width="3"/>
+                    <polygon points="40,120 180,120 110,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(70, 110)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">48.5°</text></g>
+                    <g transform="translate(110, 50)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">71.3°</text></g>
+                    <g transform="translate(215, 105)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">ext</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '118.8°' },
+                    { key: 'B', text: '119.8°' },
+                    { key: 'C', text: '120.8°' },
+                    { key: 'D', text: '117.8°' }
+                ],
+                correct: 'B',
+                explanation: "Sudut luar segitiga = jumlah 2 sudut dalam non-pelurus.\n$Sudut\\ Luar = 48.5^\\circ + 71.3^\\circ = 119.8^\\circ$."
+            },
+            {
+                id: 11,
+                topic: "Klasifikasi Sudut",
+                question: "Sebuah sudut mempunyai nilai $275^\\circ$. Jenis sudut ini dinamakan sudut...",
+                svg: `<svg viewBox="0 0 240 180" class="w-full max-w-xs h-40">
+                    <line x1="120" y1="90" x2="200" y2="90" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="120" y1="90" x2="110" y2="170" stroke="#38bdf8" stroke-width="3.5"/>
+                    <path d="M 160 90 A 40 40 0 1 1 120 50" fill="none" stroke="#f59e0b" stroke-width="3"/>
+                    <circle cx="120" cy="90" r="4" fill="#ffffff"/>
+                    <g transform="translate(170, 130)"><rect x="-24" y="-9" width="48" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">275°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: 'Sudut Tumpul' },
+                    { key: 'B', text: 'Sudut Lurus' },
+                    { key: 'C', text: 'Sudut Refleks' },
+                    { key: 'D', text: 'Sudut Penuh' }
+                ],
+                correct: 'C',
+                explanation: "Sudut refleks (reflex angle) adalah sudut yang besarnya lebih dari $180^\\circ$ tetapi kurang dari $360^\\circ$ ($180^\\circ < \\theta < 360^\\circ$)."
+            },
+            {
+                id: 12,
+                topic: "Sudut Berpelurus (Siku+Siku)",
+                question: "Tiga sudut terletak pada satu garis lurus. Jika besar dua sudut di antaranya adalah $42.5^\\circ$ dan $83.2^\\circ$, berapakah besar sudut ketiga?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="250" y2="120" stroke="#cbd5e1" stroke-width="3.5"/>
+                    <line x1="140" y1="120" x2="60" y2="40" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="140" y1="120" x2="210" y2="35" stroke="#818cf8" stroke-width="3"/>
+                    <circle cx="140" cy="120" r="4" fill="#ffffff"/>
+                    <g transform="translate(75, 105)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">42.5°</text></g>
+                    <g transform="translate(200, 105)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">83.2°</text></g>
+                    <g transform="translate(140, 60)"><rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">k</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '54.3°' },
+                    { key: 'B', text: '52.3°' },
+                    { key: 'C', text: '56.3°' },
+                    { key: 'D', text: '58.3°' }
+                ],
+                correct: 'A',
+                explanation: "Jumlah sudut pada garis lurus adalah $180^\\circ$.\n$k = 180^\\circ - (42.5^\\circ + 83.2^\\circ) = 180^\\circ - 125.7^\\circ = 54.3^\\circ$."
+            },
+            {
+                id: 13,
+                topic: "Sudut Berseberangan Luar",
+                question: "Pasangan sudut berseberangan luar (alternate exterior) pada garis sejajar berukuran $(5p - 20)^\\circ$ dan $115^\\circ$. Tentukan nilai $p$!",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="190" y1="10" x2="90" y2="150" stroke="#a855f7" stroke-width="3"/>
+                    <g transform="translate(210, 20)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(5p-20)°</text></g>
+                    <g transform="translate(70, 135)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">115°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '25' },
+                    { key: 'B', text: '27' },
+                    { key: 'C', text: '29' },
+                    { key: 'D', text: '31' }
+                ],
+                correct: 'B',
+                explanation: "Sudut berseberangan luar nilainya sama besar.\n$5p - 20 = 115$\n$5p = 135$\n$p = 135 / 5 = 27$."
+            },
+            {
+                id: 14,
+                topic: "Segitiga Sama Kaki",
+                question: "Sebuah segitiga sama kaki memiliki sudut puncak sebesar $44.6^\\circ$. Berapakah besar masing-masing sudut alasnya?",
+                svg: `<svg viewBox="0 0 240 160" class="w-full max-w-xs h-40">
+                    <polygon points="40,130 200,130 120,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="75" y1="75" x2="85" y2="85" stroke="#a855f7" stroke-width="2.5"/>
+                    <line x1="155" y1="85" x2="165" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+                    <g transform="translate(120, 48)"><rect x="-20" y="-9" width="40" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">44.6°</text></g>
+                    <g transform="translate(65, 120)"><rect x="-12" y="-9" width="24" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">a</text></g>
+                    <g transform="translate(175, 120)"><rect x="-12" y="-9" width="24" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">a</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '67.7°' },
+                    { key: 'B', text: '68.7°' },
+                    { key: 'C', text: '66.7°' },
+                    { key: 'D', text: '69.7°' }
+                ],
+                correct: 'C',
+                explanation: "Sudut alas segitiga sama kaki sama besar.\n$2a + 44.6^\\circ = 180^\\circ$\n$2a = 180 - 44.6 = 135.4$\n$a = 135.4 / 2 = 67.7^\\circ$."
+            },
+            {
+                id: 15,
+                topic: "Garis Sejajar & Transversal Kompleks",
+                question: "Pada gambar garis sejajar $L_1 \\parallel L_2$, sudut $A = 52.4^\\circ$ dan sudut $B = 63.8^\\circ$. Berapakah nilai sudut $C$ yang berada di antara kedua garis?",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="35" x2="250" y2="35" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="125" x2="250" y2="125" stroke="#cbd5e1" stroke-width="3"/>
+                    <polyline points="60,35 140,80 220,125" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <polyline points="60,35 140,80 80,125" fill="none" stroke="#f59e0b" stroke-width="3"/>
+                    <g transform="translate(90, 48)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">52.4°</text></g>
+                    <g transform="translate(110, 112)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">63.8°</text></g>
+                    <g transform="translate(160, 80)"><rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">C</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '116.2°' },
+                    { key: 'B', text: '118.2°' },
+                    { key: 'C', text: '114.2°' },
+                    { key: 'D', text: '120.2°' }
+                ],
+                correct: 'A',
+                explanation: "Dengan garis bantu sejajar di sudut $C$, sudut $C = A + B = 52.4^\\circ + 63.8^\\circ = 116.2^\\circ$."
+            },
+            {
+                id: 16,
+                topic: "Sudut Siku-Siku Bertingkat",
+                question: "Tiga sudut membentuk sudut siku-siku ($90^\\circ$). Jika perbandingan ketiga sudut tersebut adalah $2 : 3 : 4$, berapakah besar sudut terbesar?",
+                svg: `<svg viewBox="0 0 240 160" class="w-full max-w-xs h-40">
+                    <line x1="50" y1="130" x2="190" y2="130" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="50" y1="130" x2="50" y2="20" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="50" y1="130" x2="130" y2="40" stroke="#38bdf8" stroke-width="2.5"/>
+                    <line x1="50" y1="130" x2="170" y2="80" stroke="#818cf8" stroke-width="2.5"/>
+                    <rect x="50" y="115" width="15" height="15" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '30°' },
+                    { key: 'B', text: '40°' },
+                    { key: 'C', text: '50°' },
+                    { key: 'D', text: '20°' }
+                ],
+                correct: 'B',
+                explanation: "Total bagian = $2 + 3 + 4 = 9$ bagian.\n1 bagian = $90^\\circ / 9 = 10^\\circ$.\nSudut terbesar = $4 \\times 10^\\circ = 40^\\circ$."
+            },
+            {
+                id: 17,
+                topic: "Sudut Berpelurus Aljabar",
+                question: "Dua sudut berpelurus memiliki besar $(4x + 18)^\\circ$ dan $(2x + 12)^\\circ$. Berapakah nilai dari $x$?",
+                svg: `<svg viewBox="0 0 260 140" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="110" x2="230" y2="110" stroke="#cbd5e1" stroke-width="3.5"/>
+                    <line x1="140" y1="110" x2="80" y2="30" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(80, 95)"><rect x="-26" y="-9" width="52" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">(4x+18)°</text></g>
+                    <g transform="translate(180, 95)"><rect x="-26" y="-9" width="52" height="18" rx="5" fill="#818cf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(2x+12)°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '22' },
+                    { key: 'B', text: '23' },
+                    { key: 'C', text: '24' },
+                    { key: 'D', text: '25' }
+                ],
+                correct: 'D',
+                explanation: "$(4x + 18) + (2x + 12) = 180$\n$6x + 30 = 180$\n$6x = 150$\n$x = 150 / 6 = 25$."
+            },
+            {
+                id: 18,
+                topic: "Sudut Mengelilingi Titik Aljabar",
+                question: "Empat sudut mengelilingi satu titik berturut-turut bernilai $x^\\circ$, $2x^\\circ$, $3x^\\circ$, dan $4x^\\circ$. Berapakah ukuran sudut terbesar?",
+                svg: `<svg viewBox="0 0 240 180" class="w-full max-w-xs h-40">
+                    <line x1="120" y1="90" x2="190" y2="90" stroke="#38bdf8" stroke-width="2.5"/>
+                    <line x1="120" y1="90" x2="120" y2="20" stroke="#818cf8" stroke-width="2.5"/>
+                    <line x1="120" y1="90" x2="40" y2="90" stroke="#34d399" stroke-width="2.5"/>
+                    <line x1="120" y1="90" x2="70" y2="160" stroke="#f59e0b" stroke-width="2.5"/>
+                    <circle cx="120" cy="90" r="4" fill="#ffffff"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '108°' },
+                    { key: 'B', text: '144°' },
+                    { key: 'C', text: '120°' },
+                    { key: 'D', text: '136°' }
+                ],
+                correct: 'B',
+                explanation: "$x + 2x + 3x + 4x = 360^\\circ$\n$10x = 360^\\circ \\implies x = 36^\\circ$.\nSudut terbesar $= 4x = 4 \\times 36^\\circ = 144^\\circ$."
+            },
+            {
+                id: 19,
+                topic: "Garis Sejajar (Luar Sepihak)",
+                question: "Dua sudut luar sepihak (co-exterior) pada garis sejajar berukuran $(3k + 10)^\\circ$ dan $(2k + 20)^\\circ$. Tentukan nilai $k$!",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="180" y1="10" x2="90" y2="150" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(205, 20)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#a855f7"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">(3k+10)°</text></g>
+                    <g transform="translate(145, 140)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">(2k+20)°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '28' },
+                    { key: 'B', text: '32' },
+                    { key: 'C', text: '30' },
+                    { key: 'D', text: '34' }
+                ],
+                correct: 'C',
+                explanation: "Sudut luar sepihak berjumlah $180^\\circ$.\n$(3k + 10) + (2k + 20) = 180$\n$5k + 30 = 180 \\implies 5k = 150 \\implies k = 30$."
+            },
+            {
+                id: 20,
+                topic: "Segitiga Siku-siku Desimal",
+                question: "Sebuah segitiga siku-siku memiliki salah satu sudut lancip sebesar $37.8^\\circ$. Berapakah besar sudut lancip yang satunya?",
+                svg: `<svg viewBox="0 0 240 150" class="w-full max-w-xs h-40">
+                    <polygon points="40,120 200,120 40,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <rect x="40" y="105" width="15" height="15" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+                    <g transform="translate(165, 110)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">37.8°</text></g>
+                    <g transform="translate(60, 50)"><rect x="-12" y="-9" width="24" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">b</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '52.2°' },
+                    { key: 'B', text: '51.2°' },
+                    { key: 'C', text: '53.2°' },
+                    { key: 'D', text: '54.2°' }
+                ],
+                correct: 'A',
+                explanation: "Dua sudut lancip pada segitiga siku-siku saling berpenyiku ($90^\\circ$).\n$b = 90^\\circ - 37.8^\\circ = 52.2^\\circ$."
+            },
+            {
+                id: 21,
+                topic: "Jajaran Genjang (Parallelogram)",
+                question: "Pada jajaran genjang $ABCD$, sudut $A = 74.5^\\circ$. Berapakah besar sudut $B$ yang berdekatan dengan sudut $A$?",
+                svg: `<svg viewBox="0 0 260 150" class="w-full max-w-xs h-40">
+                    <polygon points="40,120 180,120 220,40 80,40" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(65, 110)"><rect x="-18" y="-9" width="36" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">74.5°</text></g>
+                    <g transform="translate(165, 110)"><rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">B</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '104.5°' },
+                    { key: 'B', text: '105.5°' },
+                    { key: 'C', text: '106.5°' },
+                    { key: 'D', text: '103.5°' }
+                ],
+                correct: 'B',
+                explanation: "Sudut-sudut yang berdekatan pada jajaran genjang saling berpelurus (jumlahnya $180^\\circ$).\n$B = 180^\\circ - 74.5^\\circ = 105.5^\\circ$."
+            },
+            {
+                id: 22,
+                topic: "Sudut Bertolak Belakang Ganda",
+                question: "Dua garis lurus berpotongan. Jika salah satu sudut bernilai $x^\\circ$ dan sudut di sebelahnya bernilai $(3x - 20)^\\circ$, berapakah nilai $x$?",
+                svg: `<svg viewBox="0 0 260 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="230" y2="30" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="30" y1="30" x2="230" y2="120" stroke="#34d399" stroke-width="3"/>
+                    <g transform="translate(80, 75)"><rect x="-12" y="-9" width="24" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">x</text></g>
+                    <g transform="translate(130, 45)"><rect x="-28" y="-9" width="56" height="18" rx="5" fill="#34d399"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">(3x-20)°</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '45' },
+                    { key: 'B', text: '40' },
+                    { key: 'C', text: '50' },
+                    { key: 'D', text: '55' }
+                ],
+                correct: 'C',
+                explanation: "Dua sudut bersebelahan pada garis lurus saling berpelurus ($180^\\circ$).\n$x + (3x - 20) = 180$\n$4x - 20 = 180 \\implies 4x = 200 \\implies x = 50$."
+            },
+            {
+                id: 23,
+                topic: "Segitiga Sama Sisi",
+                question: "Sebuah segitiga sama sisi dipotong oleh garis lurus yang sejajar dengan alasnya. Berapakah besar setiap sudut dalam dari segitiga kecil yang terbentuk di bagian atas?",
+                svg: `<svg viewBox="0 0 240 160" class="w-full max-w-xs h-40">
+                    <polygon points="40,130 200,130 120,20" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="70" y1="80" x2="170" y2="80" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="3 3"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '45°' },
+                    { key: 'B', text: '90°' },
+                    { key: 'C', text: '75°' },
+                    { key: 'D', text: '60°' }
+                ],
+                correct: 'D',
+                explanation: "Semua sudut dalam segitiga sama sisi selalu berukuran $60^\\circ$. Memotongnya dengan garis sejajar alas menghasilkan segitiga kecil yang juga sama sisi ($60^\\circ$)."
+            },
+            {
+                id: 24,
+                topic: "Garis Sejajar (Pelurus Sehadap)",
+                question: "Pada dua garis sejajar dipotong transversal, sudut $A$ dan sudut $B$ terletak sepihak luar. Jika $A = 124.8^\\circ$, berapakah besar sudut $B$?",
+                svg: `<svg viewBox="0 0 280 160" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="45" x2="250" y2="45" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="115" x2="250" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="180" y1="10" x2="90" y2="150" stroke="#38bdf8" stroke-width="3"/>
+                    <g transform="translate(195, 25)"><rect x="-20" y="-9" width="40" height="18" rx="5" fill="#38bdf8"/><text x="0" y="3" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">124.8°</text></g>
+                    <g transform="translate(135, 135)"><rect x="-14" y="-9" width="28" height="18" rx="5" fill="#f59e0b"/><text x="0" y="3" font-size="10" font-weight="black" fill="#0f172a" text-anchor="middle">B</text></g>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '55.2°' },
+                    { key: 'B', text: '56.2°' },
+                    { key: 'C', text: '54.2°' },
+                    { key: 'D', text: '57.2°' }
+                ],
+                correct: 'A',
+                explanation: "Sudut luar sepihak saling berpelurus ($180^\\circ$).\n$B = 180^\\circ - 124.8^\\circ = 55.2^\\circ$."
+            },
+            {
+                id: 25,
+                topic: "Sudut Refleks Jam",
+                question: "Pada pukul 04.00 tepat, berapa ukuran sudut refleks (sudut terbesar) yang dibentuk oleh jarum jam pendek dan jarum jam panjang?",
+                svg: `<svg viewBox="0 0 200 160" class="w-full max-w-xs h-40">
+                    <circle cx="100" cy="80" r="60" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                    <line x1="100" y1="80" x2="100" y2="30" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="100" y1="80" x2="140" y2="110" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="100" cy="80" r="5" fill="#ffffff"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '220°' },
+                    { key: 'B', text: '240°' },
+                    { key: 'C', text: '210°' },
+                    { key: 'D', text: '250°' }
+                ],
+                correct: 'B',
+                explanation: "Tiap angka pada jam = $360^\\circ / 12 = 30^\\circ$.\nPukul 04.00, sudut terkecil $= 4 \\times 30^\\circ = 120^\\circ$.\nSudut refleks $= 360^\\circ - 120^\\circ = 240^\\circ$."
+            },
+            {
+                id: 26,
+                topic: "Segi-4 & Sudut",
+                question: "Tiga sudut dalam sebuah segi-empat sembarang adalah $85^\\circ$, $95^\\circ$, dan $110^\\circ$. Berapakah besar sudut keempat?",
+                svg: `<svg viewBox="0 0 240 150" class="w-full max-w-xs h-40">
+                    <polygon points="50,120 190,120 210,40 70,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '70°' },
+                    { key: 'B', text: '80°' },
+                    { key: 'C', text: '75°' },
+                    { key: 'D', text: '65°' }
+                ],
+                correct: 'A',
+                explanation: "Jumlah sudut dalam segi-empat selalu $360^\\circ$.\n$Sudut\\ ke-4 = 360^\\circ - (85^\\circ + 95^\\circ + 110^\\circ) = 360^\\circ - 290^\\circ = 70^\\circ$."
+            },
+            {
+                id: 27,
+                topic: "Sudut Berpenyiku Desimal Presisi",
+                question: "Dua sudut saling berpenyiku. Jika sudut pertama besarnya $x$ dan sudut kedua $1.5x$, berapakah nilai sudut yang lebih besar?",
+                svg: `<svg viewBox="0 0 240 150" class="w-full max-w-xs h-40">
+                    <line x1="50" y1="120" x2="190" y2="120" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="50" y1="120" x2="50" y2="20" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="50" y1="120" x2="150" y2="50" stroke="#38bdf8" stroke-width="3"/>
+                    <rect x="50" y="105" width="15" height="15" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '36°' },
+                    { key: 'B', text: '48°' },
+                    { key: 'C', text: '54°' },
+                    { key: 'D', text: '60°' }
+                ],
+                correct: 'C',
+                explanation: "$x + 1.5x = 90^\\circ \\implies 2.5x = 90^\\circ \\implies x = 36^\\circ$.\nSudut terbesar $= 1.5 \\times 36^\\circ = 54^\\circ$."
+            },
+            {
+                id: 28,
+                topic: "Garis Sejajar Zig-Zag (Tiga Garis)",
+                question: "Dua garis sejajar dipotong garis zig-zag membentuk sudut $32^\\circ$ di atas dan $45^\\circ$ di bawah. Berapakah besar sudut siku puncak zig-zag $x$?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="30" x2="250" y2="30" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="30" y1="120" x2="250" y2="120" stroke="#cbd5e1" stroke-width="3"/>
+                    <polyline points="50,30 140,75 70,120" fill="none" stroke="#f59e0b" stroke-width="3"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '77°' },
+                    { key: 'B', text: '75°' },
+                    { key: 'C', text: '80°' },
+                    { key: 'D', text: '82°' }
+                ],
+                correct: 'A',
+                explanation: "Sesuai aturan sudut sehadap/berseberangan pada garis sejajar zig-zag: Sudut puncak $x = 32^\\circ + 45^\\circ = 77^\\circ$."
+            },
+            {
+                id: 29,
+                topic: "Segitiga & Garis Lurus Gabungan",
+                question: "Sebuah sudut luar segitiga berukuran $130^\\circ$. Jika salah satu sudut dalam yang tidak berpelurus dengannya adalah $55^\\circ$, berapakah sudut dalam satunya lagi?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="260" y2="120" stroke="#cbd5e1" stroke-width="3"/>
+                    <polygon points="40,120 180,120 120,30" fill="none" stroke="#38bdf8" stroke-width="3"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '70°' },
+                    { key: 'B', text: '75°' },
+                    { key: 'C', text: '80°' },
+                    { key: 'D', text: '65°' }
+                ],
+                correct: 'B',
+                explanation: "Sudut Luar = jumlah 2 sudut dalam non-pelurus.\n$130^\\circ = 55^\\circ + y \\implies y = 130^\\circ - 55^\\circ = 75^\\circ$."
+            },
+            {
+                id: 30,
+                topic: "Sudut Penyiku & Pelurus Gabungan",
+                question: "Sudut $A$ berpenyiku dengan sudut $B$. Sudut $B$ berpelurus dengan sudut $C$. Jika $A = 28^\\circ$, berapakah besar sudut $C$?",
+                svg: `<svg viewBox="0 0 280 150" class="w-full max-w-xs h-40">
+                    <line x1="30" y1="120" x2="250" y2="120" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="140" y1="120" x2="140" y2="30" stroke="#cbd5e1" stroke-width="3"/>
+                    <line x1="140" y1="120" x2="210" y2="50" stroke="#38bdf8" stroke-width="3"/>
+                </svg>`,
+                options: [
+                    { key: 'A', text: '118°' },
+                    { key: 'B', text: '108°' },
+                    { key: 'C', text: '128°' },
+                    { key: 'D', text: '138°' }
+                ],
+                correct: 'A',
+                explanation: "$A + B = 90^\\circ \\implies B = 90^\\circ - 28^\\circ = 62^\\circ$.\n$B + C = 180^\\circ \\implies C = 180^\\circ - 62^\\circ = 118^\\circ$."
+            }
+        ];
+
+        // -------------------------------------------------------------
+        // STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+        // -------------------------------------------------------------
+        let currentIndex = 0;
+        let userAnswers = {};      // { 1: 'A', 2: 'C', ... }
+        let flaggedQuestions = {}; // { 1: true, ... }
+        let currentFilter = 'all';
+
+        const STORAGE_KEY_ANSWERS = 'angles_quiz_user_answers_v1';
+        const STORAGE_KEY_FLAGS = 'angles_quiz_flagged_v1';
+
+        // Load saved state from LocalStorage on initial load
+        function loadSavedState() {
+            try {
+                const savedAns = localStorage.getItem(STORAGE_KEY_ANSWERS);
+                const savedFlags = localStorage.getItem(STORAGE_KEY_FLAGS);
+                if (savedAns) userAnswers = JSON.parse(savedAns);
+                if (savedFlags) flaggedQuestions = JSON.parse(savedFlags);
+            } catch (e) {
+                console.error("LocalStorage load error:", e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY_ANSWERS, JSON.stringify(userAnswers));
+                localStorage.setItem(STORAGE_KEY_FLAGS, JSON.stringify(flaggedQuestions));
+            } catch (e) {
+                console.error("LocalStorage save error:", e);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // RENDER ENGINE
+        // -------------------------------------------------------------
+        function initQuiz() {
+            loadSavedState();
+            renderQuestion(currentIndex);
+            renderGrid();
+            updateStats();
+        }
+
+        function renderQuestion(index) {
+            const q = questionsData[index];
+            currentIndex = index;
+
+            // Badges & Headers
+            document.getElementById('question-number-badge').innerText = `Soal ${index + 1} dari 30`;
+            document.getElementById('question-topic-badge').innerText = q.topic;
+            document.getElementById('question-text').innerHTML = formatMathText(q.question);
+            document.getElementById('svg-visual-box').innerHTML = q.svg;
+            document.getElementById('bottom-counter').innerText = `${index + 1} / 30`;
+
+            // Flag / Bookmark Button State
+            const isFlagged = !!flaggedQuestions[q.id];
+            const flagBtn = document.getElementById('flag-btn');
+            const flagIcon = document.getElementById('flag-icon');
+            const flagText = document.getElementById('flag-text');
+
+            if (isFlagged) {
+                flagBtn.className = "px-3 py-1.5 bg-amber-400 text-slate-900 border border-amber-500 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs";
+                flagIcon.className = "fa-solid fa-bookmark";
+                flagText.innerText = "Ditandai";
+            } else {
+                flagBtn.className = "px-3 py-1.5 bg-slate-100 hover:bg-amber-50 text-slate-600 hover:text-amber-600 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5";
+                flagIcon.className = "fa-regular fa-bookmark";
+                flagText.innerText = "Tandai Soal";
+            }
+
+            // Options Rendering
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const selectedKey = userAnswers[q.id];
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                
+                // Base styling
+                let btnStyle = "w-full p-4 rounded-2xl border-2 text-left text-sm font-semibold transition-all flex items-center justify-between group shadow-xs";
+                let badgeStyle = "w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs transition-all";
+
+                if (selectedKey) {
+                    // Question has been answered -> Instant Feedback Mode
+                    if (opt.key === q.correct) {
+                        // Correct Option (Green)
+                        btnStyle += " bg-emerald-50 border-emerald-500 text-emerald-950";
+                        badgeStyle += " bg-emerald-500 text-white";
+                    } else if (opt.key === selectedKey) {
+                        // Wrong Option Chosen (Red)
+                        btnStyle += " bg-rose-50 border-rose-500 text-rose-950";
+                        badgeStyle += " bg-rose-500 text-white";
+                    } else {
+                        // Neutral Option
+                        btnStyle += " bg-slate-50/50 border-slate-200 text-slate-400 opacity-60";
+                        badgeStyle += " bg-slate-200 text-slate-500";
+                    }
+                } else {
+                    // Unanswered Mode
+                    btnStyle += " bg-white border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 text-slate-800";
+                    badgeStyle += " bg-slate-100 group-hover:bg-blue-500 group-hover:text-white text-slate-600";
+                }
+
+                btn.className = btnStyle;
+                btn.onclick = () => selectOption(q.id, opt.key);
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="${badgeStyle}">${opt.key}</span>
+                        <span>${formatMathText(opt.text)}</span>
+                    </div>
+                    ${selectedKey ? (opt.key === q.correct ? '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>' : (opt.key === selectedKey ? '<i class="fa-solid fa-circle-xmark text-rose-600 text-lg"></i>' : '')) : ''}
+                `;
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Feedback Explanation Panel
+            const feedbackPanel = document.getElementById('feedback-panel');
+            if (selectedKey) {
+                feedbackPanel.classList.remove('hidden');
+                const isCorrect = selectedKey === q.correct;
+
+                const header = document.getElementById('feedback-header');
+                const explanation = document.getElementById('feedback-explanation');
+
+                if (isCorrect) {
+                    feedbackPanel.className = "p-5 rounded-2xl border border-emerald-200 bg-emerald-50/80 text-emerald-950 text-sm space-y-2";
+                    header.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-xl"></i> <span>Jawabanmu Tepat Sekali!</span>`;
+                } else {
+                    feedbackPanel.className = "p-5 rounded-2xl border border-rose-200 bg-rose-50/80 text-rose-950 text-sm space-y-2";
+                    header.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-xl"></i> <span>Jawaban Kurang Tepat (Jawaban Benar: ${q.correct})</span>`;
+                }
+
+                explanation.innerHTML = `<strong>Pembahasan:</strong><br>${formatMathText(q.explanation)}`;
+            } else {
+                feedbackPanel.classList.add('hidden');
+            }
+
+            // Disable/Enable Nav Buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').disabled = index === questionsData.length - 1;
+        }
+
+        function selectOption(qId, key) {
+            // Instant feedback set
+            userAnswers[qId] = key;
+            saveState();
+            renderQuestion(currentIndex);
+            renderGrid();
+            updateStats();
+        }
+
+        function toggleFlagCurrent() {
+            const q = questionsData[currentIndex];
+            flaggedQuestions[q.id] = !flaggedQuestions[q.id];
+            saveState();
+            renderQuestion(currentIndex);
+            renderGrid();
+        }
+
+        function navigateQuestion(delta) {
+            const newIndex = currentIndex + delta;
+            if (newIndex >= 0 && newIndex < questionsData.length) {
+                renderQuestion(newIndex);
+            }
+        }
+
+        function jumpToQuestion(index) {
+            renderQuestion(index);
+        }
+
+        // Helper to turn LaTeX math ($180^\circ$, \theta, \implies, etc.) into clean formatted HTML text
+        function formatMathText(str) {
+            if (!str) return '';
+            
+            // Clean up LaTeX symbols into clean Unicode mathematical characters
+            let cleaned = str
+                .replace(/\^\\?circ/g, '°')
+                .replace(/\\circ/g, '°')
+                .replace(/\^o/g, '°')
+                .replace(/\\?theta/g, 'θ')
+                .replace(/\\?parallel/g, '∥')
+                .replace(/\\?implies/g, ' ⇒ ')
+                .replace(/\\?times/g, ' × ')
+                .replace(/\n/g, '<br>');
+
+            // Render inline math blocks $...$ in styled mathematical spans
+            return cleaned.replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="font-mono font-bold text-blue-700 bg-blue-50/80 px-1 py-0.5 rounded border border-blue-100">${p1}</span>`;
+            });
+        }
+
+        // -------------------------------------------------------------
+        // NAVIGATION GRID & FILTERS
+        // -------------------------------------------------------------
+        function setGridFilter(filter) {
+            currentFilter = filter;
+            ['all', 'unanswered', 'answered', 'flagged'].forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (f === filter) {
+                    btn.className = "py-1.5 rounded-lg bg-white shadow-xs text-blue-600 font-extrabold";
+                } else {
+                    btn.className = "py-1.5 rounded-lg hover:text-slate-900";
+                }
+            });
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const navGrid = document.getElementById('nav-grid');
+            navGrid.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const isAnswered = !!userAnswers[q.id];
+                const isCorrect = userAnswers[q.id] === q.correct;
+                const isFlagged = !!flaggedQuestions[q.id];
+
+                // Filter check
+                if (currentFilter === 'unanswered' && isAnswered) return;
+                if (currentFilter === 'answered' && !isAnswered) return;
+                if (currentFilter === 'flagged' && !isFlagged) return;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                let btnClass = "w-10 h-10 rounded-xl font-extrabold text-xs flex items-center justify-center relative transition-all shadow-xs ";
+
+                if (idx === currentIndex) {
+                    btnClass += " ring-2 ring-blue-600 ring-offset-2 scale-105 z-10";
+                }
+
+                if (isAnswered) {
+                    if (isCorrect) {
+                        btnClass += " bg-emerald-500 text-white";
+                    } else {
+                        btnClass += " bg-rose-500 text-white";
+                    }
+                } else {
+                    btnClass += " bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200";
+                }
+
+                btn.className = btnClass;
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.innerText = idx + 1;
+
+                // Bookmark Icon Badge on corner if flagged
+                if (isFlagged) {
+                    const flagDot = document.createElement('span');
+                    flagDot.className = "absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-400 border-2 border-white rounded-full flex items-center justify-center text-[8px] text-slate-900";
+                    flagDot.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+                    btn.appendChild(flagDot);
+                }
+
+                navGrid.appendChild(btn);
+            });
+        }
+
+        // -------------------------------------------------------------
+        // STATS & SUMMARY
+        // -------------------------------------------------------------
+        function updateStats() {
+            const total = questionsData.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            let correctCount = 0;
+
+            questionsData.forEach(q => {
+                if (userAnswers[q.id] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const scorePercent = Math.round((correctCount / total) * 100);
+
+            document.getElementById('stat-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('stat-correct').innerText = correctCount;
+            document.getElementById('stat-score').innerText = `${scorePercent}%`;
+
+            // Top progress bar width
+            const progressBar = document.getElementById('top-progress-bar');
+            progressBar.style.width = `${(answeredCount / total) * 100}%`;
+        }
+
+        function showFinalSummary() {
+            const total = questionsData.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            let correctCount = 0;
+
+            questionsData.forEach(q => {
+                if (userAnswers[q.id] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const incorrectCount = answeredCount - correctCount;
+            const unansweredCount = total - answeredCount;
+            const scorePercent = Math.round((correctCount / total) * 100);
+
+            document.getElementById('modal-score').innerText = `${scorePercent}%`;
+            document.getElementById('modal-correct').innerText = correctCount;
+            document.getElementById('modal-incorrect').innerText = incorrectCount;
+            document.getElementById('modal-unanswered').innerText = unansweredCount;
+
+            const msgBox = document.getElementById('modal-message-box');
+            if (scorePercent >= 85) {
+                msgBox.className = "p-4 rounded-2xl text-xs sm:text-sm font-semibold text-center border bg-emerald-50 border-emerald-200 text-emerald-900";
+                msgBox.innerHTML = "🌟 <strong>Luar Biasa!</strong> Kamu sangat menguasai konsep sudut dan hubungan antar sudut tingkat Cambridge Stage 8!";
+            } else if (scorePercent >= 60) {
+                msgBox.className = "p-4 rounded-2xl text-xs sm:text-sm font-semibold text-center border bg-blue-50 border-blue-200 text-blue-900";
+                msgBox.innerHTML = "👍 <strong>Kerja Bagus!</strong> Pemahaman dasarmu sudah kokoh, periksa pembahasan pada soal yang salah untuk hasil sempurna.";
+            } else {
+                msgBox.className = "p-4 rounded-2xl text-xs sm:text-sm font-semibold text-center border bg-amber-50 border-amber-200 text-amber-900";
+                msgBox.innerHTML = "💪 <strong>Tetap Semangat!</strong> Tinjau kembali materi jenis sudut, garis sejajar, dan persamaan aljabar lalu coba lagi!";
+            }
+
+            document.getElementById('summary-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('summary-modal').classList.add('hidden');
+        }
+
+        function confirmReset() {
+            if (confirm("Apakah kamu yakin ingin mengulang quiz dari awal? Semua jawaban yang tersimpan akan dihapus.")) {
+                userAnswers = {};
+                flaggedQuestions = {};
+                localStorage.removeItem(STORAGE_KEY_ANSWERS);
+                localStorage.removeItem(STORAGE_KEY_FLAGS);
+                closeModal();
+                initQuiz();
+            }
+        }
+
+        // Initialize on page load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
